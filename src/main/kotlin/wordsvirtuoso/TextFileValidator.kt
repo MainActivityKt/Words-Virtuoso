@@ -1,7 +1,8 @@
 package wordsvirtuoso
 
+import utils.Utils
+import utils.Utils.isWordValid
 import java.io.File
-import java.io.FileNotFoundException
 import kotlin.system.exitProcess
 
 class TextFileValidator {
@@ -22,7 +23,7 @@ class TextFileValidator {
 
     fun countValidWords() {
         inputFile.readLines().forEach {
-            if (!isValidWord(it)) {
+            if (isWordValid(it)) {
                 invalidWordsNum++
             }
         }
@@ -32,11 +33,7 @@ class TextFileValidator {
         println(if (invalidWordsNum == 0) "All words are valid!" else "Warning: $invalidWordsNum invalid words were found in the ${inputFile.name} file.")
     }
 
-    private fun isValidWord(word: String): Boolean {
-        word.apply {
-            return length == 5 && toSet().size == length && !contains(Regex("[^A-Za-z]"))
-        }
-    }
+
 }
 
 fun main() {
