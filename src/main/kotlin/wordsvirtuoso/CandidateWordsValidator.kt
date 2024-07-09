@@ -2,7 +2,6 @@ package wordsvirtuoso
 
 import utils.Messages
 import java.io.File
-import kotlin.system.exitProcess
 import utils.Utils.areArgumentsValid
 import utils.Utils.isFileAvailable
 import utils.Utils.isWordValid
@@ -14,7 +13,7 @@ class CandidateWordsValidator (private val args: List<String> = emptyList()){
 
     fun argumentsAreValid(): Boolean {
         if (!areArgumentsValid(args)) {
-            message = Messages.WRONG_NUMBER_OF_WORDS
+            message = Messages.WRONG_NUMBER_OF_ARGS
             return false
         }
         return true

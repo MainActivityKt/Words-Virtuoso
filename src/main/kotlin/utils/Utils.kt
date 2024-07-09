@@ -15,7 +15,7 @@ object Utils {
 
 object Messages {
     const val SUCCESSFUL_MESSAGE = "Words Virtuoso"
-    const val WRONG_NUMBER_OF_WORDS = "Error: Wrong number of arguments."
+    const val WRONG_NUMBER_OF_ARGS = "Error: Wrong number of arguments."
     val fileUnavailable = {
             wordsFile: Boolean, name: String -> "Error: The" + (if (wordsFile) " " else " candidate ") + "words file $name doesn't exist." }
 
