@@ -2,7 +2,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import utils.Messages
+import utils.TEXTS
 import wordsvirtuoso.CandidateWordsValidator
 import kotlin.test.assertEquals
 
@@ -25,7 +25,7 @@ class CandidateWordsValidatorTest {
         val args =listOf("insufficientArgs.txt")
         val validator = CandidateWordsValidator(args)
         validator.argumentsAreValid()
-        assertEquals(validator.message, Messages.WRONG_NUMBER_OF_ARGS)
+        assertEquals(validator.message, TEXTS.WRONG_NUMBER_OF_ARGS)
     }
 
     @Test
@@ -34,7 +34,7 @@ class CandidateWordsValidatorTest {
         val args =listOf("args1", "arg2", "arg2")
         val validator = CandidateWordsValidator(args)
         validator.argumentsAreValid()
-        assertEquals(validator.message, Messages.WRONG_NUMBER_OF_ARGS)
+        assertEquals(validator.message, TEXTS.WRONG_NUMBER_OF_ARGS)
     }
 
     @Test
@@ -43,7 +43,7 @@ class CandidateWordsValidatorTest {
         val args = emptyList<String>()
         val validator = CandidateWordsValidator(args)
         validator.argumentsAreValid()
-        assertEquals(validator.message, Messages.WRONG_NUMBER_OF_ARGS)
+        assertEquals(validator.message, TEXTS.WRONG_NUMBER_OF_ARGS)
     }
 
     @Test
@@ -51,7 +51,7 @@ class CandidateWordsValidatorTest {
         val args = listOf("notExists.txt", "candidates.txt")
         val validator = CandidateWordsValidator(args)
         validator.filesAreAvailable()
-        assertEquals(validator.message, Messages.fileUnavailable(true, args.first()))
+        assertEquals(validator.message, TEXTS.fileUnavailable(true, args.first()))
     }
 
     @Test
@@ -59,7 +59,7 @@ class CandidateWordsValidatorTest {
         val args = listOf(wordsFilePath, "candidates.txt")
         val validator = CandidateWordsValidator(args)
         validator.filesAreAvailable()
-        assertEquals(validator.message, Messages.fileUnavailable(false, args.last()))
+        assertEquals(validator.message, TEXTS.fileUnavailable(false, args.last()))
     }
 
     @Test
@@ -67,7 +67,7 @@ class CandidateWordsValidatorTest {
         val args = listOf(invalidWordsFilePath, candidatesFilePath)
         val validator = CandidateWordsValidator(args)
         validator.filesAreValid()
-        assertEquals(validator.message, Messages.invalidWordsMessage(5, "invalidWords.txt"))
+        assertEquals(validator.message, TEXTS.invalidWordsMessage(5, "invalidWords.txt"))
     }
 
     @Test
@@ -75,7 +75,7 @@ class CandidateWordsValidatorTest {
         val args = listOf(wordsFilePath, invalidWordsFilePath)
         val validator = CandidateWordsValidator(args)
         validator.filesAreValid()
-        assertEquals(validator.message, Messages.invalidWordsMessage(5, "invalidWords.txt"))
+        assertEquals(validator.message, TEXTS.invalidWordsMessage(5, "invalidWords.txt"))
     }
 
 

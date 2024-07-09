@@ -1,19 +1,21 @@
 package wordsvirtuoso
 
-import utils.Messages
+import utils.TEXTS
 import java.io.File
 import utils.Utils.areArgumentsValid
 import utils.Utils.isFileAvailable
 import utils.Utils.isWordValid
 
-class CandidateWordsValidator (private val args: List<String> = emptyList()){
-    lateinit var wordsFile: File
-    lateinit var candidateWordsFile: File
+open class CandidateWordsValidator (private val args: List<String> = emptyList()){
+    private lateinit var wordsFile: File
+    protected lateinit var candidateWordsFile: File
     lateinit var message: String
+    val words = mutableListOf<String>()
+
 
     fun argumentsAreValid(): Boolean {
         if (!areArgumentsValid(args)) {
-            message = Messages.WRONG_NUMBER_OF_ARGS
+            message = TEXTS.WRONG_NUMBER_OF_ARGS
             return false
         }
         return true
@@ -21,10 +23,10 @@ class CandidateWordsValidator (private val args: List<String> = emptyList()){
 
     fun filesAreAvailable(): Boolean {
         if (!isFileAvailable(args.first())) {
-            message = Messages.fileUnavailable(true, args.first())
+            message = TEXTS.fileUnavailable(true, args.first())
             return false
         } else if (!isFileAvailable(args.last())) {
-            message = Messages.fileUnavailable(false, args.last())
+            message = TEXTS.fileUnavailable(false, args.last())
             return false
         }
         return true
@@ -48,14 +50,14 @@ class CandidateWordsValidator (private val args: List<String> = emptyList()){
             }
         }
         if (invalidWords > 0) {
-            message = Messages.invalidWordsMessage(invalidWords, file.name)
+            message = TEXTS.invalidWordsMessage(invalidWords, file.name)
             return false
         }
         return true
     }
 
     private fun validateCandidateWords() : Boolean{
-        val words = wordsFile.readLines()
+        words.addAll(wordsFile.readLines())
         var counter = 0
         candidateWordsFile.readLines().forEach {
             if (words.none { list -> list.contains(it, true) }) {
@@ -63,7 +65,7 @@ class CandidateWordsValidator (private val args: List<String> = emptyList()){
             }
         }
         if (counter > 0) {
-            message = Messages.invalidCandidateWords(counter, wordsFile.name)
+            message = TEXTS.invalidCandidateWords(counter, wordsFile.name)
             return false
         }
         return true
@@ -73,7 +75,7 @@ class CandidateWordsValidator (private val args: List<String> = emptyList()){
 fun main(args: Array<String>) {
     val validator = CandidateWordsValidator(args.toList())
     if (validator.argumentsAreValid() && validator.filesAreAvailable() && validator.filesAreValid() && validator.candidatesAreValid()) {
-        validator.message = Messages.SUCCESSFUL_MESSAGE
+        validator.message = TEXTS.GAME_TITLE
     }
     println(validator.message)
 }
