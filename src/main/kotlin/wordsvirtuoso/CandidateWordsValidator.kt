@@ -7,33 +7,41 @@ import utils.Utils.areArgumentsValid
 import utils.Utils.isFileAvailable
 import utils.Utils.isWordValid
 
-class CandidateWordsValidator (args: List<String> = emptyList()){
-    private val wordsFile: File
-    private val candidateWordsFile: File
+class CandidateWordsValidator (private val args: List<String> = emptyList()){
+    lateinit var wordsFile: File
+    lateinit var candidateWordsFile: File
+    lateinit var message: String
 
-    init {
+    fun argumentsAreValid(): Boolean {
         if (!areArgumentsValid(args)) {
-            println(Messages.WRONG_NUMBER_OF_WORDS)
-            exitProcess(0)
-        } else if (!isFileAvailable(args.first())) {
-            println(Messages.fileUnavailable(true, args.first()))
-            exitProcess(0)
-        } else if(!isFileAvailable(args.last())) {
-            println(Messages.fileUnavailable(true, args.last()))
-            exitProcess(0)
+            message = Messages.WRONG_NUMBER_OF_WORDS
+            return false
         }
-        wordsFile = File("${args.first()}.txt")
-        candidateWordsFile = File("${args.last()}.txt")
+        return true
     }
 
-    fun startValidating() {
-        validateFile(wordsFile)
-        validateFile(candidateWordsFile)
-        validateCandidateWords()
-        println(Messages.SUCCESSFUL_MESSAGE)
+    fun filesAreAvailable(): Boolean {
+        if (!isFileAvailable(args.first())) {
+            message = Messages.fileUnavailable(true, args.first())
+            return false
+        } else if (!isFileAvailable(args.last())) {
+            message = Messages.fileUnavailable(false, args.last())
+            return false
+        }
+        return true
     }
 
-    private fun validateFile(file: File) {
+    fun filesAreValid(): Boolean {
+        wordsFile = File(args.first())
+        candidateWordsFile = File(args.last())
+        return isFileValid(wordsFile) && isFileValid(candidateWordsFile)
+    }
+
+    fun candidatesAreValid(): Boolean {
+        return validateCandidateWords()
+    }
+
+    private fun isFileValid(file: File): Boolean {
         var invalidWords = 0
         file.readLines().forEach {
             if (!isWordValid(it)) {
@@ -41,27 +49,32 @@ class CandidateWordsValidator (args: List<String> = emptyList()){
             }
         }
         if (invalidWords > 0) {
-            println(Messages.invalidWordsMessage(invalidWords, file.name))
-            exitProcess(0)
+            message = Messages.invalidWordsMessage(invalidWords, file.name)
+            return false
         }
+        return true
     }
 
-    private fun validateCandidateWords() {
+    private fun validateCandidateWords() : Boolean{
         val words = wordsFile.readLines()
         var counter = 0
         candidateWordsFile.readLines().forEach {
-            if (!words.contains(it)) {
+            if (words.none { list -> list.contains(it, true) }) {
                 counter++
             }
         }
         if (counter > 0) {
-            println(Messages.invalidCandidateWords(counter, candidateWordsFile.name))
-            exitProcess(0)
+            message = Messages.invalidCandidateWords(counter, wordsFile.name)
+            return false
         }
+        return true
     }
 }
 
 fun main(args: Array<String>) {
     val validator = CandidateWordsValidator(args.toList())
+    if (validator.argumentsAreValid() && validator.filesAreAvailable() && validator.filesAreValid() && validator.candidatesAreValid()) {
+        validator.message = Messages.SUCCESSFUL_MESSAGE
+    }
+    println(validator.message)
 }
-
